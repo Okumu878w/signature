@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sign Here</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 2rem 1.5rem 1.5rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    background: #1a6b3a;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+
+  .logo svg { width: 26px; height: 26px; fill: #fff; }
+
+  h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.3px;
+  }
+
+  .subtitle {
+    font-size: 0.82rem;
+    color: #888;
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    border: 2px dashed #c8e6d4;
+    border-radius: 12px;
+    background: #fafffe;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .canvas-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #bcd8c7;
+    font-size: 0.85rem;
+    font-style: italic;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    text-align: center;
+    line-height: 1.5;
+    user-select: none;
+  }
+
+  .canvas-label svg {
+    display: block;
+    margin: 0 auto 0.4rem;
+    width: 28px;
+    height: 28px;
+    opacity: 0.5;
+  }
+
+  .sign-line {
+    border-top: 1.5px solid #d0e8d8;
+    margin: 0 1rem;
+    margin-top: -2px;
+  }
+
+  .sign-line-label {
+    font-size: 0.72rem;
+    color: #a0bfab;
+    text-align: center;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-clear {
+    background: #f2f4f7;
+    color: #555;
+  }
+
+  .btn-clear:hover { background: #e8eaed; }
+
+  .btn-save {
+    background: #1a6b3a;
+    color: #fff;
+  }
+
+  .btn-save:hover { background: #155c31; }
+  .btn-save:disabled { background: #9ec9b0; cursor: not-allowed; }
+
+  .preview-section {
+    display: none;
+    margin-top: 0.75rem;
+    border-top: 1px solid #eee;
+    padding-top: 0.75rem;
+  }
+
+  .preview-section.visible { display: block; }
+
+  .preview-label {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 0.4rem;
+  }
+
+  .preview-img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e0e8e4;
+  }
+
+  .download-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+
+  .btn-download {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #1a6b3a;
+    background: #fff;
+    color: #1a6b3a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-download:hover { background: #f0faf4; }
+
+  .info-box {
+    background: #f0faf4;
+    border: 1px solid #c8e6d4;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #2d7a50;
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+
+  .info-box strong { color: #1a5c38; }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .step-num {
+    background: #1a6b3a;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 0.68rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .color-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    align-items: center;
+  }
+
+  .color-label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-right: 0.2rem;
+  }
+
+  .color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.1s;
+  }
+
+  .color-dot:hover { transform: scale(1.1); }
+  .color-dot.active { border-color: #333; }
+
+  .thickness-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .thickness-label { font-size: 0.75rem; color: #888; }
+
+  .thickness-btn {
+    border: 1.5px solid #d0d5dd;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    color: #555;
+    transition: background 0.1s;
+  }
+
+  .thickness-btn.active {
+    background: #1a6b3a;
+    color: #fff;
+    border-color: #1a6b3a;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.21a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+    </div>
+    <h1>Digital Signature</h1>
+    <p class="subtitle">Sign in the box below using your finger or stylus</p>
+  </div>
+
+  <div class="color-row">
+    <span class="color-label">Ink:</span>
+    <div class="color-dot active" style="background:#111;" data-color="#111" onclick="setColor(this)"></div>
+    <div class="color-dot" style="background:#1a4fba;" data-color="#1a4fba" onclick="setColor(this)"></div>
+    <div class="color-dot" style="background:#b30000;" data-color="#b30000" onclick="setColor(this)"></div>
+  </div>
+
+  <div class="thickness-row">
+    <span class="thickness-label">Size:</span>
+    <button class="thickness-btn" onclick="setThickness(1.5, this)">Thin</button>
+    <button class="thickness-btn active" onclick="setThickness(2.5, this)">Normal</button>
+    <button class="thickness-btn" onclick="setThickness(4, this)">Thick</button>
+  </div>
+
+  <div class="canvas-wrapper" id="canvasWrapper">
+    <canvas id="signatureCanvas" height="200"></canvas>
+    <div class="canvas-label" id="canvasHint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M15.232 5.232l3.536 3.536M9 11l6.828-6.828a2 2 0 0 1 2.828 2.828L11.828 13.828a2 2 0 0 1-1.414.586H8v-2.414A2 2 0 0 1 9 11z"/>
+      </svg>
+      Draw your signature here
+    </div>
+  </div>
+
+  <div class="sign-line"></div>
+  <div class="sign-line-label">SIGNATURE</div>
+
+  <div class="row">
+    <button class="btn btn-clear" onclick="clearCanvas()">Clear</button>
+    <button class="btn btn-save" id="saveBtn" onclick="saveSignature()" disabled>Save Signature</button>
+  </div>
+
+  <div class="preview-section" id="previewSection">
+    <p class="preview-label">Your saved signature — download and upload it to the form:</p>
+    <img class="preview-img" id="previewImg" alt="Signature preview" />
+    <div class="download-row">
+      <button class="btn-download" onclick="downloadSignature()">⬇ Download as PNG</button>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>How to use:</strong>
+    <div class="step"><div class="step-num">1</div><span>Sign in the box above using your finger or stylus</span></div>
+    <div class="step"><div class="step-num">2</div><span>Tap <strong>Save Signature</strong>, then <strong>Download as PNG</strong></span></div>
+    <div class="step"><div class="step-num">3</div><span>Go back to the Google Form and upload the downloaded image</span></div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+const hint = document.getElementById('canvasHint');
+const saveBtn = document.getElementById('saveBtn');
+const wrapper = document.getElementById('canvasWrapper');
+
+let drawing = false;
+let hasSigned = false;
+let strokeColor = '#111';
+let strokeWidth = 2.5;
+
+function resizeCanvas() {
+  const ratio = window.devicePixelRatio || 1;
+  const w = wrapper.clientWidth;
+  canvas.width = w * ratio;
+  canvas.height = 200 * ratio;
+  canvas.style.width = w + 'px';
+  canvas.style.height = '200px';
+  ctx.scale(ratio, ratio);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = strokeWidth;
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  if (e.touches) {
+    return {
+      x: (e.touches[0].clientX - rect.left),
+      y: (e.touches[0].clientY - rect.top)
+    };
+  }
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function startDraw(e) {
+  e.preventDefault();
+  drawing = true;
+  const pos = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+  if (!hasSigned) {
+    hasSigned = true;
+    hint.style.opacity = '0';
+    saveBtn.disabled = false;
+  }
+}
+
+function draw(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = strokeWidth;
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+}
+
+function endDraw(e) {
+  drawing = false;
+  ctx.beginPath();
+}
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', endDraw);
+canvas.addEventListener('mouseleave', endDraw);
+canvas.addEventListener('touchstart', startDraw, { passive: false });
+canvas.addEventListener('touchmove', draw, { passive: false });
+canvas.addEventListener('touchend', endDraw);
+
+function clearCanvas() {
+  const ratio = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / ratio, canvas.height / ratio);
+  hasSigned = false;
+  hint.style.opacity = '1';
+  saveBtn.disabled = true;
+  document.getElementById('previewSection').classList.remove('visible');
+}
+
+function saveSignature() {
+  const preview = document.getElementById('previewImg');
+  const section = document.getElementById('previewSection');
+  preview.src = canvas.toDataURL('image/png');
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function downloadSignature() {
+  const link = document.createElement('a');
+  link.download = 'my_signature.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function setColor(el) {
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  strokeColor = el.dataset.color;
+}
+
+function setThickness(val, el) {
+  document.querySelectorAll('.thickness-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  strokeWidth = val;
+}
+</script>
+</body>
+</html>
