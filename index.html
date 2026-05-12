@@ -69,6 +69,7 @@
   canvas {
     display: block;
     width: 100%;
+    height: 200px;
     touch-action: none;
     cursor: crosshair;
   }
@@ -86,6 +87,7 @@
     text-align: center;
     line-height: 1.5;
     user-select: none;
+    white-space: nowrap;
   }
 
   .canvas-label svg {
@@ -164,6 +166,7 @@
     width: 100%;
     border-radius: 8px;
     border: 1px solid #e0e8e4;
+    background: #fff;
   }
 
   .download-row {
@@ -284,7 +287,7 @@
       </svg>
     </div>
     <h1>Digital Signature</h1>
-    <p class="subtitle">Sign in the box below using your finger or stylus</p>
+    <p class="subtitle">Sign in the box below using your finger, mouse or stylus</p>
   </div>
 
   <div class="color-row">
@@ -302,7 +305,7 @@
   </div>
 
   <div class="canvas-wrapper" id="canvasWrapper">
-    <canvas id="signatureCanvas" height="200"></canvas>
+    <canvas id="signatureCanvas"></canvas>
     <div class="canvas-label" id="canvasHint">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M15.232 5.232l3.536 3.536M9 11l6.828-6.828a2 2 0 0 1 2.828 2.828L11.828 13.828a2 2 0 0 1-1.414.586H8v-2.414A2 2 0 0 1 9 11z"/>
@@ -323,132 +326,225 @@
     <p class="preview-label">Your saved signature — download and upload it to the form:</p>
     <img class="preview-img" id="previewImg" alt="Signature preview" />
     <div class="download-row">
-      <button class="btn-download" onclick="downloadSignature()">⬇ Download as PNG</button>
+      <button class="btn-download" onclick="downloadSignature()">&#11015; Download as PNG</button>
     </div>
   </div>
 
   <div class="info-box">
     <strong>How to use:</strong>
-    <div class="step"><div class="step-num">1</div><span>Sign in the box above using your finger or stylus</span></div>
+    <div class="step"><div class="step-num">1</div><span>Sign in the box above using your mouse or finger</span></div>
     <div class="step"><div class="step-num">2</div><span>Tap <strong>Save Signature</strong>, then <strong>Download as PNG</strong></span></div>
     <div class="step"><div class="step-num">3</div><span>Go back to the Google Form and upload the downloaded image</span></div>
   </div>
 </div>
 
 <script>
-const canvas = document.getElementById('signatureCanvas');
-const ctx = canvas.getContext('2d');
-const hint = document.getElementById('canvasHint');
-const saveBtn = document.getElementById('saveBtn');
-const wrapper = document.getElementById('canvasWrapper');
+  const canvas = document.getElementById('signatureCanvas');
+  const ctx = canvas.getContext('2d');
+  const hint = document.getElementById('canvasHint');
+  const saveBtn = document.getElementById('saveBtn');
+  const wrapper = document.getElementById('canvasWrapper');
 
-let drawing = false;
-let hasSigned = false;
-let strokeColor = '#111';
-let strokeWidth = 2.5;
+  let drawing = false;
+  let hasSigned = false;
+  let strokeColor = '#111';
+  let strokeWidth = 2.5;
+  let lastX = 0;
+  let lastY = 0;
 
-function resizeCanvas() {
-  const ratio = window.devicePixelRatio || 1;
-  const w = wrapper.clientWidth;
-  canvas.width = w * ratio;
-  canvas.height = 200 * ratio;
-  canvas.style.width = w + 'px';
-  canvas.style.height = '200px';
-  ctx.scale(ratio, ratio);
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.strokeStyle = strokeColor;
-  ctx.lineWidth = strokeWidth;
-}
+  // Store all strokes so we can redraw after resize
+  let strokes = [];
+  let currentStroke = [];
 
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+  function setupCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = wrapper.getBoundingClientRect();
+    const w = rect.width;
+    const h = 200;
 
-function getPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  const ratio = window.devicePixelRatio || 1;
-  if (e.touches) {
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Redraw all saved strokes
+    redrawAll();
+  }
+
+  function redrawAll() {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    strokes.forEach(function(stroke) {
+      if (stroke.points.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = stroke.color;
+      ctx.lineWidth = stroke.width;
+      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      for (var i = 1; i < stroke.points.length; i++) {
+        ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+      }
+      ctx.stroke();
+    });
+  }
+
+  // Get position relative to canvas in CSS pixels
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches && e.touches.length > 0) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    }
     return {
-      x: (e.touches[0].clientX - rect.left),
-      y: (e.touches[0].clientY - rect.top)
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
     };
   }
-  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-}
 
-function startDraw(e) {
-  e.preventDefault();
-  drawing = true;
-  const pos = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(pos.x, pos.y);
-  if (!hasSigned) {
-    hasSigned = true;
-    hint.style.opacity = '0';
-    saveBtn.disabled = false;
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const pos = getPos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    currentStroke = [{ x: pos.x, y: pos.y }];
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+
+    if (!hasSigned) {
+      hasSigned = true;
+      hint.style.opacity = '0';
+      saveBtn.disabled = false;
+    }
   }
-}
 
-function draw(e) {
-  if (!drawing) return;
-  e.preventDefault();
-  const pos = getPos(e);
-  ctx.strokeStyle = strokeColor;
-  ctx.lineWidth = strokeWidth;
-  ctx.lineTo(pos.x, pos.y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(pos.x, pos.y);
-}
+  function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const pos = getPos(e);
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    currentStroke.push({ x: pos.x, y: pos.y });
+    lastX = pos.x;
+    lastY = pos.y;
+  }
 
-function endDraw(e) {
-  drawing = false;
-  ctx.beginPath();
-}
+  function endDraw(e) {
+    if (!drawing) return;
+    drawing = false;
+    if (currentStroke.length > 0) {
+      strokes.push({
+        points: currentStroke,
+        color: strokeColor,
+        width: strokeWidth
+      });
+      currentStroke = [];
+    }
+  }
 
-canvas.addEventListener('mousedown', startDraw);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', endDraw);
-canvas.addEventListener('mouseleave', endDraw);
-canvas.addEventListener('touchstart', startDraw, { passive: false });
-canvas.addEventListener('touchmove', draw, { passive: false });
-canvas.addEventListener('touchend', endDraw);
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', draw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
 
-function clearCanvas() {
-  const ratio = window.devicePixelRatio || 1;
-  ctx.clearRect(0, 0, canvas.width / ratio, canvas.height / ratio);
-  hasSigned = false;
-  hint.style.opacity = '1';
-  saveBtn.disabled = true;
-  document.getElementById('previewSection').classList.remove('visible');
-}
+  function clearCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    strokes = [];
+    currentStroke = [];
+    hasSigned = false;
+    hint.style.opacity = '1';
+    saveBtn.disabled = true;
+    document.getElementById('previewSection').classList.remove('visible');
+    document.getElementById('previewImg').src = '';
+  }
 
-function saveSignature() {
-  const preview = document.getElementById('previewImg');
-  const section = document.getElementById('previewSection');
-  preview.src = canvas.toDataURL('image/png');
-  section.classList.add('visible');
-  section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
+  function getSignatureDataURL() {
+    // Create a fresh offscreen canvas with white background
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.width / dpr;
+    const h = canvas.height / dpr;
 
-function downloadSignature() {
-  const link = document.createElement('a');
-  link.download = 'my_signature.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-}
+    const offscreen = document.createElement('canvas');
+    offscreen.width = canvas.width;
+    offscreen.height = canvas.height;
+    const offCtx = offscreen.getContext('2d');
+    offCtx.scale(dpr, dpr);
 
-function setColor(el) {
-  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-  el.classList.add('active');
-  strokeColor = el.dataset.color;
-}
+    // White background
+    offCtx.fillStyle = '#ffffff';
+    offCtx.fillRect(0, 0, w, h);
 
-function setThickness(val, el) {
-  document.querySelectorAll('.thickness-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  strokeWidth = val;
-}
+    // Redraw all strokes onto offscreen canvas
+    strokes.forEach(function(stroke) {
+      if (stroke.points.length < 2) return;
+      offCtx.beginPath();
+      offCtx.strokeStyle = stroke.color;
+      offCtx.lineWidth = stroke.width;
+      offCtx.lineCap = 'round';
+      offCtx.lineJoin = 'round';
+      offCtx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      for (var i = 1; i < stroke.points.length; i++) {
+        offCtx.lineTo(stroke.points[i].x, stroke.points[i].y);
+      }
+      offCtx.stroke();
+    });
+
+    return offscreen.toDataURL('image/png');
+  }
+
+  function saveSignature() {
+    const dataURL = getSignatureDataURL();
+    const preview = document.getElementById('previewImg');
+    const section = document.getElementById('previewSection');
+    preview.src = dataURL;
+    section.classList.add('visible');
+    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function downloadSignature() {
+    const dataURL = getSignatureDataURL();
+    const link = document.createElement('a');
+    link.download = 'my_signature.png';
+    link.href = dataURL;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function setColor(el) {
+    document.querySelectorAll('.color-dot').forEach(function(d) {
+      d.classList.remove('active');
+    });
+    el.classList.add('active');
+    strokeColor = el.dataset.color;
+  }
+
+  function setThickness(val, el) {
+    document.querySelectorAll('.thickness-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    el.classList.add('active');
+    strokeWidth = val;
+  }
+
+  // Init
+  setupCanvas();
+  window.addEventListener('resize', setupCanvas);
 </script>
 </body>
 </html>
