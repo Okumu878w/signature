@@ -26,36 +26,20 @@
     max-width: 480px;
   }
 
-  .header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
+  .header { text-align: center; margin-bottom: 1.5rem; }
 
   .logo {
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     background: #1a6b3a;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin: 0 auto 0.75rem;
   }
 
   .logo svg { width: 26px; height: 26px; fill: #fff; }
 
-  h1 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 0.25rem;
-    letter-spacing: -0.3px;
-  }
-
-  .subtitle {
-    font-size: 0.82rem;
-    color: #888;
-  }
+  h1 { font-size: 1.2rem; font-weight: 700; color: #111; margin-bottom: 0.25rem; letter-spacing: -0.3px; }
+  .subtitle { font-size: 0.82rem; color: #888; }
 
   .canvas-wrapper {
     position: relative;
@@ -76,8 +60,7 @@
 
   .canvas-label {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     color: #bcd8c7;
     font-size: 0.85rem;
@@ -93,97 +76,43 @@
   .canvas-label svg {
     display: block;
     margin: 0 auto 0.4rem;
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     opacity: 0.5;
   }
 
-  .sign-line {
-    border-top: 1.5px solid #d0e8d8;
-    margin: 0 1rem;
-    margin-top: -2px;
-  }
+  .sign-line { border-top: 1.5px solid #d0e8d8; margin: 0 1rem; margin-top: -2px; }
+  .sign-line-label { font-size: 0.72rem; color: #a0bfab; text-align: center; margin-top: 0.3rem; margin-bottom: 0.5rem; letter-spacing: 0.5px; }
 
-  .sign-line-label {
-    font-size: 0.72rem;
-    color: #a0bfab;
-    text-align: center;
-    margin-top: 0.3rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
-  }
-
-  .row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 0.75rem;
-  }
+  .row { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; }
 
   .btn {
-    flex: 1;
-    padding: 0.65rem 1rem;
-    border-radius: 10px;
-    border: none;
-    font-size: 0.88rem;
-    font-weight: 600;
+    flex: 1; padding: 0.65rem 1rem;
+    border-radius: 10px; border: none;
+    font-size: 0.88rem; font-weight: 600;
     cursor: pointer;
     transition: opacity 0.15s, transform 0.1s;
   }
 
   .btn:active { transform: scale(0.97); }
-
-  .btn-clear {
-    background: #f2f4f7;
-    color: #555;
-  }
-
+  .btn-clear { background: #f2f4f7; color: #555; }
   .btn-clear:hover { background: #e8eaed; }
-
-  .btn-save {
-    background: #1a6b3a;
-    color: #fff;
-  }
-
+  .btn-save { background: #1a6b3a; color: #fff; }
   .btn-save:hover { background: #155c31; }
   .btn-save:disabled { background: #9ec9b0; cursor: not-allowed; }
 
-  .preview-section {
-    display: none;
-    margin-top: 0.75rem;
-    border-top: 1px solid #eee;
-    padding-top: 0.75rem;
-  }
-
+  .preview-section { display: none; margin-top: 0.75rem; border-top: 1px solid #eee; padding-top: 0.75rem; }
   .preview-section.visible { display: block; }
+  .preview-label { font-size: 0.78rem; color: #888; margin-bottom: 0.4rem; }
+  .preview-img { width: 100%; border-radius: 8px; border: 1px solid #e0e8e4; background: #fff; }
 
-  .preview-label {
-    font-size: 0.78rem;
-    color: #888;
-    margin-bottom: 0.4rem;
-  }
-
-  .preview-img {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid #e0e8e4;
-    background: #fff;
-  }
-
-  .download-row {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 0.6rem;
-  }
+  .download-row { display: flex; gap: 0.6rem; margin-top: 0.6rem; }
 
   .btn-download {
-    flex: 1;
-    padding: 0.6rem 1rem;
+    flex: 1; padding: 0.6rem 1rem;
     border-radius: 10px;
     border: 1.5px solid #1a6b3a;
-    background: #fff;
-    color: #1a6b3a;
-    font-size: 0.85rem;
-    font-weight: 600;
+    background: #fff; color: #1a6b3a;
+    font-size: 0.85rem; font-weight: 600;
     cursor: pointer;
     transition: background 0.15s;
   }
@@ -195,54 +124,28 @@
     border: 1px solid #c8e6d4;
     border-radius: 10px;
     padding: 0.75rem 1rem;
-    font-size: 0.8rem;
-    color: #2d7a50;
-    line-height: 1.6;
-    margin-top: 0.75rem;
+    font-size: 0.8rem; color: #2d7a50;
+    line-height: 1.6; margin-top: 0.75rem;
   }
 
   .info-box strong { color: #1a5c38; }
-
-  .step {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.3rem;
-  }
+  .step { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.3rem; }
 
   .step-num {
-    background: #1a6b3a;
-    color: #fff;
-    width: 18px;
-    height: 18px;
+    background: #1a6b3a; color: #fff;
+    width: 18px; height: 18px;
     border-radius: 50%;
-    font-size: 0.68rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
+    font-size: 0.68rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
   }
 
-  .color-row {
-    display: flex;
-    gap: 0.4rem;
-    margin-bottom: 0.75rem;
-    align-items: center;
-  }
-
-  .color-label {
-    font-size: 0.75rem;
-    color: #888;
-    margin-right: 0.2rem;
-  }
+  .color-row { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; align-items: center; }
+  .color-label { font-size: 0.75rem; color: #888; margin-right: 0.2rem; }
 
   .color-dot {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
+    width: 24px; height: 24px;
+    border-radius: 50%; cursor: pointer;
     border: 2px solid transparent;
     transition: transform 0.1s;
   }
@@ -250,31 +153,18 @@
   .color-dot:hover { transform: scale(1.1); }
   .color-dot.active { border-color: #333; }
 
-  .thickness-row {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-
+  .thickness-row { display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; }
   .thickness-label { font-size: 0.75rem; color: #888; }
 
   .thickness-btn {
     border: 1.5px solid #d0d5dd;
-    background: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    color: #555;
+    background: #fff; border-radius: 6px;
+    cursor: pointer; padding: 4px 10px;
+    font-size: 0.75rem; color: #555;
     transition: background 0.1s;
   }
 
-  .thickness-btn.active {
-    background: #1a6b3a;
-    color: #fff;
-    border-color: #1a6b3a;
-  }
+  .thickness-btn.active { background: #1a6b3a; color: #fff; border-color: #1a6b3a; }
 </style>
 </head>
 <body>
@@ -339,83 +229,78 @@
 </div>
 
 <script>
-  const canvas = document.getElementById('signatureCanvas');
-  const ctx = canvas.getContext('2d');
-  const hint = document.getElementById('canvasHint');
-  const saveBtn = document.getElementById('saveBtn');
-  const wrapper = document.getElementById('canvasWrapper');
+  var canvas = document.getElementById('signatureCanvas');
+  var ctx = canvas.getContext('2d');
+  var hint = document.getElementById('canvasHint');
+  var saveBtn = document.getElementById('saveBtn');
+  var wrapper = document.getElementById('canvasWrapper');
 
-  let drawing = false;
-  let hasSigned = false;
-  let strokeColor = '#111';
-  let strokeWidth = 2.5;
-  let lastX = 0;
-  let lastY = 0;
+  var drawing = false;
+  var hasSigned = false;
+  var strokeColor = '#111';
+  var strokeWidth = 2.5;
 
-  // Store all strokes so we can redraw after resize
-  let strokes = [];
-  let currentStroke = [];
+  var allStrokes = [];    // completed strokes
+  var currentPoints = []; // points of stroke in progress
 
   function setupCanvas() {
-    const dpr = window.devicePixelRatio || 1;
-    const rect = wrapper.getBoundingClientRect();
-    const w = rect.width;
-    const h = 200;
-
+    var dpr = window.devicePixelRatio || 1;
+    var w = wrapper.getBoundingClientRect().width;
+    var h = 200;
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-
     ctx.scale(dpr, dpr);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-
-    // Redraw all saved strokes
     redrawAll();
   }
 
+  // Redraw every saved stroke onto the canvas
   function redrawAll() {
-    const dpr = window.devicePixelRatio || 1;
+    var dpr = window.devicePixelRatio || 1;
     ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-    strokes.forEach(function(stroke) {
-      if (stroke.points.length < 2) return;
-      ctx.beginPath();
-      ctx.strokeStyle = stroke.color;
-      ctx.lineWidth = stroke.width;
-      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-      for (var i = 1; i < stroke.points.length; i++) {
-        ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-      }
-      ctx.stroke();
+    allStrokes.forEach(function(s) {
+      smoothStroke(ctx, s.points, s.color, s.width);
     });
   }
 
-  // Get position relative to canvas in CSS pixels
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    if (e.touches && e.touches.length > 0) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top
-      };
+  // Quadratic bezier through midpoints — fills gaps left by sparse touch events
+  function smoothStroke(context, pts, color, width) {
+    if (!pts || pts.length < 2) return;
+    context.beginPath();
+    context.strokeStyle = color;
+    context.lineWidth = width;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    context.moveTo(pts[0].x, pts[0].y);
+    if (pts.length === 2) {
+      context.lineTo(pts[1].x, pts[1].y);
+    } else {
+      for (var i = 1; i < pts.length - 1; i++) {
+        var mx = (pts[i].x + pts[i + 1].x) / 2;
+        var my = (pts[i].y + pts[i + 1].y) / 2;
+        context.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+      }
+      context.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
     }
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
+    context.stroke();
+  }
+
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    if (e.touches && e.touches.length > 0) {
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
   function startDraw(e) {
     e.preventDefault();
     drawing = true;
-    const pos = getPos(e);
-    lastX = pos.x;
-    lastY = pos.y;
-    currentStroke = [{ x: pos.x, y: pos.y }];
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-
+    var pos = getPos(e);
+    currentPoints = [{ x: pos.x, y: pos.y }];
     if (!hasSigned) {
       hasSigned = true;
       hint.style.opacity = '0';
@@ -426,30 +311,19 @@
   function draw(e) {
     if (!drawing) return;
     e.preventDefault();
-    const pos = getPos(e);
-    ctx.strokeStyle = strokeColor;
-    ctx.lineWidth = strokeWidth;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    currentStroke.push({ x: pos.x, y: pos.y });
-    lastX = pos.x;
-    lastY = pos.y;
+    var pos = getPos(e);
+    currentPoints.push({ x: pos.x, y: pos.y });
+    // Redraw everything including the live stroke
+    redrawAll();
+    smoothStroke(ctx, currentPoints, strokeColor, strokeWidth);
   }
 
   function endDraw(e) {
     if (!drawing) return;
     drawing = false;
-    if (currentStroke.length > 0) {
-      strokes.push({
-        points: currentStroke,
-        color: strokeColor,
-        width: strokeWidth
-      });
-      currentStroke = [];
+    if (currentPoints.length > 0) {
+      allStrokes.push({ points: currentPoints.slice(), color: strokeColor, width: strokeWidth });
+      currentPoints = [];
     }
   }
 
@@ -462,10 +336,10 @@
   canvas.addEventListener('touchend', endDraw);
 
   function clearCanvas() {
-    const dpr = window.devicePixelRatio || 1;
+    var dpr = window.devicePixelRatio || 1;
     ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-    strokes = [];
-    currentStroke = [];
+    allStrokes = [];
+    currentPoints = [];
     hasSigned = false;
     hint.style.opacity = '1';
     saveBtn.disabled = true;
@@ -473,76 +347,53 @@
     document.getElementById('previewImg').src = '';
   }
 
-  function getSignatureDataURL() {
-    // Create a fresh offscreen canvas with white background
-    const dpr = window.devicePixelRatio || 1;
-    const w = canvas.width / dpr;
-    const h = canvas.height / dpr;
-
-    const offscreen = document.createElement('canvas');
-    offscreen.width = canvas.width;
-    offscreen.height = canvas.height;
-    const offCtx = offscreen.getContext('2d');
+  function getExportDataURL() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr;
+    var h = canvas.height / dpr;
+    var off = document.createElement('canvas');
+    off.width = canvas.width;
+    off.height = canvas.height;
+    var offCtx = off.getContext('2d');
     offCtx.scale(dpr, dpr);
-
-    // White background
     offCtx.fillStyle = '#ffffff';
     offCtx.fillRect(0, 0, w, h);
-
-    // Redraw all strokes onto offscreen canvas
-    strokes.forEach(function(stroke) {
-      if (stroke.points.length < 2) return;
-      offCtx.beginPath();
-      offCtx.strokeStyle = stroke.color;
-      offCtx.lineWidth = stroke.width;
-      offCtx.lineCap = 'round';
-      offCtx.lineJoin = 'round';
-      offCtx.moveTo(stroke.points[0].x, stroke.points[0].y);
-      for (var i = 1; i < stroke.points.length; i++) {
-        offCtx.lineTo(stroke.points[i].x, stroke.points[i].y);
-      }
-      offCtx.stroke();
+    allStrokes.forEach(function(s) {
+      smoothStroke(offCtx, s.points, s.color, s.width);
     });
-
-    return offscreen.toDataURL('image/png');
+    return off.toDataURL('image/png');
   }
 
   function saveSignature() {
-    const dataURL = getSignatureDataURL();
-    const preview = document.getElementById('previewImg');
-    const section = document.getElementById('previewSection');
-    preview.src = dataURL;
-    section.classList.add('visible');
-    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    var url = getExportDataURL();
+    document.getElementById('previewImg').src = url;
+    var sec = document.getElementById('previewSection');
+    sec.classList.add('visible');
+    sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function downloadSignature() {
-    const dataURL = getSignatureDataURL();
-    const link = document.createElement('a');
-    link.download = 'my_signature.png';
-    link.href = dataURL;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    var url = getExportDataURL();
+    var a = document.createElement('a');
+    a.download = 'my_signature.png';
+    a.href = url;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   function setColor(el) {
-    document.querySelectorAll('.color-dot').forEach(function(d) {
-      d.classList.remove('active');
-    });
+    document.querySelectorAll('.color-dot').forEach(function(d) { d.classList.remove('active'); });
     el.classList.add('active');
     strokeColor = el.dataset.color;
   }
 
   function setThickness(val, el) {
-    document.querySelectorAll('.thickness-btn').forEach(function(b) {
-      b.classList.remove('active');
-    });
+    document.querySelectorAll('.thickness-btn').forEach(function(b) { b.classList.remove('active'); });
     el.classList.add('active');
     strokeWidth = val;
   }
 
-  // Init
   setupCanvas();
   window.addEventListener('resize', setupCanvas);
 </script>
